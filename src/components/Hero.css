@@ -1,0 +1,129 @@
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  padding-top: 5rem;
+}
+
+.hero-container {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  width: 100%;
+}
+
+.hero-content {
+  flex: 1.5;
+  max-width: 650px;
+}
+
+.hero-lanyard-wrapper {
+  flex: 1;
+  max-width: 400px;
+  height: 500px;
+  position: relative;
+  display: flex;
+  justify-content: flex-end; /* Move Lanyard to the right */
+  align-items: center;
+  overflow: visible;
+  margin-right: -2rem; /* Push to the absolute edge of container */
+}
+
+/* Let the canvas overflow if it needs to */
+.hero-lanyard-wrapper .lanyard-wrapper {
+  height: 600px !important;
+  width: 100%;
+}
+
+.greeting {
+  color: var(--accent-color);
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.hero-title {
+  font-size: 5rem;
+  margin-bottom: 1.5rem;
+  letter-spacing: -2px;
+}
+
+.hero-description {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  margin-bottom: 3rem;
+  max-width: 600px;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 1rem;
+}
+
+.hero-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.5;
+}
+
+.glow-1 {
+  width: 400px;
+  height: 400px;
+  background: var(--accent-glow);
+  top: -100px;
+  right: -100px;
+}
+
+.glow-2 {
+  width: 500px;
+  height: 500px;
+  background: rgba(58, 123, 213, 0.2);
+  bottom: -200px;
+  left: -200px;
+}
+
+@media (max-width: 768px) {
+  .hero-container {
+    flex-direction: column;
+    text-align: center;
+  }
+  .hero-title {
+    font-size: 3rem;
+  }
+  .hero-description {
+    font-size: 1.1rem;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .hero-cta {
+    flex-direction: column;
+    align-items: center;
+  }
+  .hero-lanyard-wrapper {
+    height: 400px;
+    max-width: 100%;
+    margin-right: 0;
+  }
+  .hero-lanyard-wrapper .lanyard-wrapper {
+    height: 400px !important;
+  }
+}
