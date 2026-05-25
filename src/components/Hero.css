@@ -167,13 +167,14 @@
 
   .hero-lanyard-wrapper {
     height: 350px;
-    max-width: 100%;
-    margin-right: 0;
-    touch-action: none; /* Prevents page scrolling when interacting with lanyard on mobile */
+    width: 200px;
+    margin: 0 auto;
+    touch-action: none;
   }
 
   .hero-lanyard-wrapper .lanyard-wrapper {
     height: 350px !important;
+    width: 100% !important;
     touch-action: none;
   }
 }
