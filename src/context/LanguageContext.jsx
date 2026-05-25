@@ -32,7 +32,7 @@ const translations = {
     'about.title_highlight': 'Saya',
     'about.subtitle': 'Perkenalan singkat tentang siapa saya dan apa yang saya lakukan.',
     'about.journey': 'Perjalanan Saya',
-    'about.p1': 'Nama saya Atama Cahya El-firdausy, seorang mahasiswa semester akhir di jurusanTeknik Informatika, Universitas Muhammadiyah Yogyakarta. ',
+    'about.p1': 'Nama saya Atama Cahya El-firdausy, seorang mahasiswa semester akhir di jurusan Teknik Informatika, Universitas Muhammadiyah Yogyakarta. ',
     'about.p2': 'Ketika saya tidak sedang mengode, saya suka mengeksplorasi teknologi baru, berkontribusi pada open-source, atau mengasah kemampuan desain saya.',
     'about.education': 'Pendidikan',
     'about.edu.university': 'Universitas Muhammadiyah Yogyakarta',
