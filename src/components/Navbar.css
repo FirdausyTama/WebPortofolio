@@ -11,7 +11,7 @@
 }
 
 .navbar.scrolled {
-  padding: 1rem 0;
+  padding: 1.3rem 0;
   background-color: var(--nav-scrolled-bg);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -40,9 +40,15 @@
   color: var(--text-primary);
 }
 
-.theme-toggle {
+.nav-actions {
   position: absolute;
   right: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.theme-toggle, .lang-toggle {
   background: transparent;
   border: none;
   color: var(--text-primary);
@@ -55,7 +61,16 @@
   transition: background-color 0.3s ease;
 }
 
-.theme-toggle:hover {
+.lang-toggle {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.85rem;
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  padding: 0.3rem 0.5rem;
+}
+
+.theme-toggle:hover, .lang-toggle:hover {
   background-color: rgba(128, 128, 128, 0.2);
 }
 
@@ -86,17 +101,21 @@
     flex-direction: column;
     padding-top: 6rem;
     padding-left: 2rem;
-    gap: 2rem;
+    gap: 2.5rem;
     transition: var(--transition-smooth);
     border-right: 1px solid var(--glass-border);
     box-shadow: 10px 0 30px rgba(0,0,0,0.5);
+  }
+
+  .nav-links a {
+    font-size: 1.2rem;
   }
 
   .nav-links.open {
     left: 0;
   }
 
-  .theme-toggle {
+  .nav-actions {
     right: 1rem;
   }
 }

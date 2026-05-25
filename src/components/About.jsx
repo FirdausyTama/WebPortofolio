@@ -1,13 +1,16 @@
 import React from 'react';
 import './About.css';
 import fotoDiri from '../assets/fotodiri.png';
+import { useLanguage } from '../context/LanguageContext';
 
 const About = () => {
+  const { t } = useLanguage();
+
   return (
     <section id="about" className="about">
       <div className="container">
-        <h2 className="section-title">Tentang <span className="text-gradient">Saya</span></h2>
-        <p className="section-subtitle">Perkenalan singkat tentang siapa saya dan apa yang saya lakukan.</p>
+        <h2 className="section-title">{t('about.title')} <span className="">{t('about.title_highlight')}</span></h2>
+        <p className="section-subtitle">{t('about.subtitle')}</p>
         
         <div className="about-content">
           <div className="about-image-wrapper reveal">
@@ -16,22 +19,49 @@ const About = () => {
             </div>
           </div>
           <div className="about-text glass reveal" style={{ transitionDelay: '0.2s' }}>
-            <h3>Perjalanan Saya</h3>
-            <p>
-              Saya adalah pengembang yang bersemangat dengan perhatian pada detail desain. Selama beberapa tahun terakhir, saya 
-              telah beralih dari membuat skrip dasar menjadi membangun aplikasi web skala penuh yang sangat interaktif. 
-              Tujuan saya adalah menjembatani jarak antara estetika dan fungsionalitas.
-            </p>
-            <p>
-              Ketika saya tidak sedang mengode, saya suka mengeksplorasi teknologi baru, berkontribusi pada *open-source*, atau mengasah kemampuan desain saya.
-            </p>
-            <div className="skills">
-              <span className="skill-tag">React</span>
-              <span className="skill-tag">JavaScript (ES6+)</span>
-              <span className="skill-tag">CSS3 & HTML5</span>
-              <span className="skill-tag">UI/UX Design</span>
-              <span className="skill-tag">Node.js</span>
+            <h3>{t('about.journey')}</h3>
+            <p>{t('about.p1')}</p>
+            <p>{t('about.p2')}</p>
+
+            <div className="about-education" style={{ marginTop: '2.5rem' }}>
+              <h3>{t('about.education')}</h3>
+              <ul style={{ listStyleType: 'none', padding: 0, marginBottom: '2rem' }}>
+                <li style={{ marginBottom: '0.3rem', fontWeight: 'bold', fontSize: '1.1rem', color: 'var(--text-primary)' }}>{t('about.edu.university')}</li>
+                <li style={{ color: 'var(--text-secondary)', marginBottom: '0.2rem' }}>{t('about.edu.major')}</li>
+                <li style={{ color: 'var(--text-secondary)' }}>{t('about.edu.year')}</li>
+              </ul>
+
+              <a href="/cv_atama_firdausy.pdf" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="7 10 12 15 17 10"></polyline>
+                  <line x1="12" y1="15" x2="12" y2="3"></line>
+                </svg>
+                {t('about.download_cv')}
+              </a>
             </div>
+          </div>
+        </div>
+
+        <div className="tech-stack glass reveal" style={{ transitionDelay: '0.4s' }}>
+          <h3>{t('about.tech_stack')}</h3>
+          <div className="skills">
+            <span className="skill-tag">React</span>
+            <span className="skill-tag">JavaScript</span>
+            <span className="skill-tag">CSS3 & HTML5</span>
+            <span className="skill-tag">UI/UX Design</span>
+            <span className="skill-tag">Node.js</span>
+            <span className="skill-tag">Python</span>
+            <span className="skill-tag">Figma</span>
+            <span className="skill-tag">Tailwind CSS</span>
+            <span className="skill-tag">Bootstrap</span>
+            <span className="skill-tag">Git & GitHub</span>
+            <span className="skill-tag">TypeScript</span>
+            <span className="skill-tag">Next.js</span>
+            <span className="skill-tag">PHP</span>
+            <span className="skill-tag">Express.js</span>
+            <span className="skill-tag">Laravel</span>
+            <span className="skill-tag">MySQL</span>
           </div>
         </div>
       </div>

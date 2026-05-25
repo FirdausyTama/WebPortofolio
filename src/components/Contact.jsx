@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import './Contact.css';
+import { useLanguage } from '../context/LanguageContext';
 
 const Contact = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { t } = useLanguage();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,13 +19,13 @@ const Contact = () => {
       });
       
       if (response.ok) {
-        alert("Pesan berhasil dikirim!");
+        alert(t('contact.alert.success'));
         e.target.reset();
       } else {
-        alert("Maaf, terjadi kesalahan saat mengirim pesan.");
+        alert(t('contact.alert.error'));
       }
     } catch (error) {
-      alert("Maaf, terjadi kesalahan pada jaringan.");
+      alert(t('contact.alert.network'));
     } finally {
       setIsSubmitting(false);
     }
@@ -32,19 +34,25 @@ const Contact = () => {
   return (
     <section id="contact" className="contact">
       <div className="container">
-        <h2 className="section-title">Mari <span className="text-gradient">Terhubung</span></h2>
+        <h2 className="section-title">{t('contact.title')} <span className="text-gradient">{t('contact.title_highlight')}</span></h2>
         <p className="section-subtitle">
-          Saya selalu terbuka untuk mendiskusikan proyek baru, ide kreatif, atau peluang untuk menjadi bagian dari visi Anda.
+          {t('contact.subtitle')}
         </p>
 
         <div className="contact-content">
           <div className="contact-info glass reveal">
-            <h3>Hubungi Saya</h3>
-            <p>Silakan kirimkan email melalui formulir di samping, atau hubungi saya melalui media sosial di bawah ini.</p>
-            <div className="social-links">
-              <a href="#" className="social-link">LinkedIn</a>
-              <a href="#" className="social-link">GitHub</a>
-              <a href="#" className="social-link">Twitter</a>
+            <h3>{t('contact.info.title')}</h3>
+            <p>{t('contact.info.desc')}</p>
+            <p style={{ marginTop: '1rem', fontWeight: '500' }}>
+              {t('contact.info.direct_email').split('atama.firdausy@gmail.com')[0]}
+              <a href="mailto:atama.firdausy@gmail.com" style={{ color: 'var(--accent-color)' }}>
+                atama.firdausy@gmail.com
+              </a>
+            </p>
+            <div className="social-links" style={{ marginTop: '1.5rem' }}>
+              <a href="https://www.linkedin.com/in/firdausy-tama/" className="social-link">LinkedIn</a>
+              <a href="https://github.com/firdausytama/" className="social-link">GitHub</a>
+              <a href="https://www.instagram.com/firdausy_tamz/" className="social-link">Instagram</a>
             </div>
           </div>
           
@@ -54,30 +62,30 @@ const Contact = () => {
             <input type="hidden" name="_template" value="table" />
             
             <div className="form-group">
-              <label htmlFor="name">Nama</label>
-              <input type="text" id="name" name="name" placeholder="Masukkan nama Anda" required />
+              <label htmlFor="name">{t('contact.form.name')}</label>
+              <input type="text" id="name" name="name" placeholder={t('contact.form.name_placeholder')} required />
             </div>
             <div className="form-group">
-              <label htmlFor="email">Email</label>
-              <input type="email" id="email" name="email" placeholder="Masukkan email Anda" required />
+              <label htmlFor="email">{t('contact.form.email')}</label>
+              <input type="email" id="email" name="email" placeholder={t('contact.form.email_placeholder')} required />
             </div>
             <div className="form-group">
-              <label htmlFor="subject">Subjek</label>
-              <input type="text" id="subject" name="_subject" placeholder="Masukkan subjek pesan" required />
+              <label htmlFor="subject">{t('contact.form.subject')}</label>
+              <input type="text" id="subject" name="_subject" placeholder={t('contact.form.subject_placeholder')} required />
             </div>
             <div className="form-group">
-              <label htmlFor="message">Pesan</label>
-              <textarea id="message" name="message" rows="5" placeholder="Tulis pesan Anda di sini..." required></textarea>
+              <label htmlFor="message">{t('contact.form.message')}</label>
+              <textarea id="message" name="message" rows="5" placeholder={t('contact.form.message_placeholder')} required></textarea>
             </div>
             <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
-              {isSubmitting ? 'Mengirim...' : 'Kirim Pesan'}
+              {isSubmitting ? t('contact.form.sending') : t('contact.form.submit')}
             </button>
           </form>
         </div>
       </div>
       
       <div className="footer-copyright">
-        <p>&copy; 2026 Hak Cipta Dilindungi.</p>
+        <p>{t('footer.copyright')}</p>
       </div>
     </section>
   );

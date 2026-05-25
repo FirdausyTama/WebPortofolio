@@ -1,60 +1,204 @@
 .certificates {
   position: relative;
-  background-color: var(--surface-color);
 }
 
 .cert-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2.5rem;
 }
 
 .cert-card {
-  padding: 2rem;
   border-radius: 20px;
-  display: flex;
-  align-items: flex-start;
-  gap: 1.5rem;
+  overflow: hidden;
   transition: var(--transition-smooth);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 
 .cert-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
   border-color: rgba(0, 210, 255, 0.3);
 }
 
-.cert-icon {
-  background: rgba(0, 210, 255, 0.1);
-  padding: 1rem;
-  border-radius: 15px;
+.cert-image-container {
+  width: 100%;
+  height: 220px;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
   display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.cert-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.cert-image-container a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.cert-image-container a:hover .cert-image {
+  transform: scale(1.05);
+}
+
+.cert-image-placeholder {
+  display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 1rem;
+  color: var(--text-secondary);
+}
+
+.cert-image-placeholder span {
+  font-size: 0.9rem;
+  font-family: var(--font-heading);
 }
 
 .cert-info {
+  padding: 2rem;
+  flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-.cert-title {
-  font-size: 1.25rem;
+.cert-issuer {
+  font-size: 0.8rem;
+  color: var(--accent-color);
+  text-transform: uppercase;
+  letter-spacing: 1px;
   margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.cert-title {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
   color: var(--text-primary);
 }
 
-.cert-issuer {
-  font-size: 0.95rem;
+.cert-description {
   color: var(--text-secondary);
-  margin-bottom: 1rem;
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  flex: 1;
+  line-height: 1.5;
 }
 
-.cert-date {
+.cert-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.cert-date, .cert-duration {
   font-size: 0.8rem;
-  color: var(--accent-color);
-  font-weight: 600;
-  background: rgba(255, 255, 255, 0.05);
-  padding: 0.2rem 0.6rem;
+  color: var(--text-secondary);
+  background: rgba(255,255,255,0.05);
+  padding: 0.3rem 0.8rem;
+  border-radius: 5px;
+  display: inline-block;
+  width: fit-content;
+}
+
+.cert-actions {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+}
+
+.cert-btn {
+  padding: 0.6rem 1.2rem;
+  font-size: 0.9rem;
   border-radius: 50px;
-  align-self: flex-start;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.cert-card.clickable {
+  cursor: pointer;
+}
+
+.cert-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  opacity: 0;
+  animation: fadeIn 0.3s forwards;
+}
+
+.cert-modal-content {
+  position: relative;
+  max-width: 900px;
+  max-height: 90vh;
+  background: var(--surface-color);
+  padding: 1rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  transform: scale(0.9);
+  animation: scaleUp 0.3s forwards;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.cert-modal-image {
+  max-width: 100%;
+  max-height: calc(90vh - 2rem);
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.cert-modal-close {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  width: 40px;
+  height: 40px;
+  background: var(--accent-color);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s, background 0.2s;
+  z-index: 1001;
+}
+
+.cert-modal-close:hover {
+  transform: scale(1.1);
+  background: #00b8e6;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  to { transform: scale(1); }
 }

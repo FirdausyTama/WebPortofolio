@@ -28,10 +28,12 @@
   height: 500px;
   position: relative;
   display: flex;
-  justify-content: flex-end; /* Move Lanyard to the right */
+  justify-content: flex-end;
+  /* Move Lanyard to the right */
   align-items: center;
   overflow: visible;
-  margin-right: -2rem; /* Push to the absolute edge of container */
+  margin-right: -2rem;
+  /* Push to the absolute edge of container */
 }
 
 /* Let the canvas overflow if it needs to */
@@ -63,9 +65,27 @@
   max-width: 600px;
 }
 
-.hero-cta {
+.hero-tags {
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.hero-tag {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-secondary);
+  padding: 0.6rem 1.5rem;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.hero-tag.highlight-tag {
+  background: rgba(0, 210, 255, 0.1);
+  color: var(--accent-color);
+  border: 1px solid rgba(0, 210, 255, 0.3);
 }
 
 .hero-background {
@@ -106,23 +126,27 @@
     flex-direction: column;
     text-align: center;
   }
+
   .hero-title {
     font-size: 3rem;
   }
+
   .hero-description {
     font-size: 1.1rem;
     margin-left: auto;
     margin-right: auto;
   }
-  .hero-cta {
-    flex-direction: column;
-    align-items: center;
+
+  .hero-tags {
+    justify-content: center;
   }
+
   .hero-lanyard-wrapper {
     height: 400px;
     max-width: 100%;
     margin-right: 0;
   }
+
   .hero-lanyard-wrapper .lanyard-wrapper {
     height: 400px !important;
   }

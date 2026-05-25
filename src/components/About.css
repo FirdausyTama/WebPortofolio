@@ -1,5 +1,4 @@
 .about {
-  background-color: var(--surface-color);
   position: relative;
 }
 
@@ -32,6 +31,24 @@
   flex-wrap: wrap;
   gap: 0.8rem;
   margin-top: 2rem;
+}
+
+.tech-stack {
+  margin-top: 4rem;
+  padding: 3rem;
+  border-radius: 24px;
+  text-align: center;
+}
+
+.tech-stack h3 {
+  font-size: 1.8rem;
+  margin-bottom: 2rem;
+  color: var(--text-primary);
+}
+
+.tech-stack .skills {
+  justify-content: center;
+  margin-top: 0;
 }
 
 .skill-tag {
