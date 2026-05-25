@@ -83,12 +83,30 @@
   text-align: center;
 }
 
+.github-calendar-wrapper {
+  margin-top: 4rem; 
+  padding: 2rem; 
+  display: flex; 
+  flex-direction: column; 
+  align-items: center;
+  width: 100%;
+  overflow-x: auto;
+}
+
+.github-calendar-scroll {
+  min-width: 800px;
+  display: flex;
+  justify-content: center;
+  padding-bottom: 1rem;
+}
+
 @media (max-width: 992px) {
   .about-content {
     grid-template-columns: 1fr;
+    gap: 2rem;
   }
   .about-image {
-    max-width: 400px;
+    max-width: 320px;
     margin: 0 auto;
   }
 }
@@ -96,5 +114,15 @@
 @media (max-width: 768px) {
   .about-text {
     padding: 1.5rem;
+  }
+  .about-text h3 {
+    font-size: 1.5rem;
+  }
+  .about-text p {
+    font-size: 1rem;
+  }
+  .github-calendar-wrapper {
+    padding: 1.5rem 1rem;
+    margin-top: 2rem;
   }
 }

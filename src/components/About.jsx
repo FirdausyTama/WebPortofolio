@@ -1,10 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import './About.css';
 import fotoDiri from '../assets/fotodiri.png';
 import { useLanguage } from '../context/LanguageContext';
+import { GitHubCalendar } from 'react-github-calendar';
 
 const About = () => {
   const { t } = useLanguage();
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    handleResize(); // Initial check
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   return (
     <section id="about" className="about">
@@ -40,6 +49,19 @@ const About = () => {
                 {t('about.download_cv')}
               </a>
             </div>
+          </div>
+        </div>
+
+        <div className="github-calendar-wrapper glass reveal">
+          <h3 style={{ marginBottom: '2rem', color: 'var(--text-primary)' }}>GitHub Contributions</h3>
+          <div className="github-calendar-scroll" style={isMobile ? { minWidth: 'unset', width: '100%', padding: '0 0.5rem' } : {}}>
+            <GitHubCalendar 
+              username="firdausytama" 
+              colorScheme="dark"
+              blockSize={isMobile ? 5 : 15}
+              blockMargin={isMobile ? 1 : 5}
+              fontSize={isMobile ? 10 : 14}
+            />
           </div>
         </div>
 

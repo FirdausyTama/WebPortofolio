@@ -14,8 +14,8 @@
 }
 
 .tech-card {
-  background-color: rgba(15, 15, 25, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background-color: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: 16px;
   padding: 1.5rem 1rem;
   display: flex;
@@ -31,9 +31,9 @@
 
 .tech-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-  border-color: rgba(255, 255, 255, 0.1);
-  background-color: rgba(25, 25, 35, 0.8);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  border-color: var(--accent-color);
+  background-color: var(--surface-color-hover);
 }
 
 .tech-icon {

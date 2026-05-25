@@ -82,13 +82,22 @@
 
 @media (max-width: 768px) {
   .showcase-tabs {
-    flex-direction: column;
-    padding: 1rem;
+    flex-direction: row;
+    padding: 0.5rem;
+    overflow-x: auto;
+    justify-content: flex-start;
   }
 
   .tab-btn {
-    width: 100%;
-    flex-direction: row;
-    padding: 1rem;
+    flex: 1;
+    min-width: 100px;
+    flex-direction: column;
+    padding: 0.8rem 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .tab-btn svg {
+    width: 20px;
+    height: 20px;
   }
 }

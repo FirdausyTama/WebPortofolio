@@ -18,12 +18,12 @@ const techData = [
   { name: 'Node.js', icon: FaNodeJs, color: '#339933' },
   { name: 'Bootstrap', icon: FaBootstrap, color: '#7952B3' },
   { name: 'TypeScript', icon: SiTypescript, color: '#3178C6' },
-  { name: 'Next.js', icon: SiNextdotjs, color: '#FFFFFF' },
+  { name: 'Next.js', icon: SiNextdotjs, color: 'var(--text-primary)' },
   { name: 'PHP', icon: FaPhp, color: '#777BB4' },
   { name: 'Laravel', icon: FaLaravel, color: '#FF2D20' },
   { name: 'MySQL', icon: SiMysql, color: '#4479A1' },
-  { name: 'Express.js', icon: SiExpress, color: '#FFFFFF' },
-  { name: 'Git & GitHub', icon: FaGithub, color: '#FFFFFF' },
+  { name: 'Express.js', icon: SiExpress, color: 'var(--text-primary)' },
+  { name: 'Git & GitHub', icon: FaGithub, color: 'var(--text-primary)' },
   { name: 'Figma', icon: FaFigma, color: '#F24E1E' },
 ];
 
