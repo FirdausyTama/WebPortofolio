@@ -24,8 +24,10 @@ const translations = {
     'hero.greeting.prefix': 'Halo, Saya ',
     'hero.title_1': 'Vibe Code Is My',
     'hero.title_2': 'Life Style',
+    'hero.tag.skills': 'Keahlian Utama',
     'hero.tag.dev': 'Pengembang Web',
-    'hero.tag.open': 'Terbuka Untuk Bekerja',
+    'hero.tag.open': 'Terbuka untuk Bekerja',
+    'hero.scroll': '^ Gulir ke Atas ^',
 
     // About
     'about.title': 'Tentang',
@@ -128,6 +130,7 @@ const translations = {
     'hero.tag.skills': 'Core Skills',
     'hero.tag.dev': 'Web Developer',
     'hero.tag.open': 'Open to Work',
+    'hero.scroll': '^ Scroll Up ^',
 
     // About
     'about.title': 'About',

@@ -280,4 +280,8 @@ section:not(:last-of-type)::after {
   section {
     padding: 4rem 0;
   }
+  .btn {
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+  }
 }

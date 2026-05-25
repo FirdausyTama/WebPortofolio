@@ -42,6 +42,9 @@ const Hero = () => {
         <div className="hero-lanyard-wrapper animate-fade-up" style={{ animationDelay: '0.2s' }}>
           <Lanyard position={[0, 0, 20]} gravity={[0, -40, 0]} />
         </div>
+        <div className="hero-scroll-indicator">
+          {t('hero.scroll')}
+        </div>
       </div>
       <div className="hero-background">
         <div style={{ position: 'absolute', inset: 0, zIndex: 1 }}>
