@@ -74,45 +74,40 @@ const Projects = () => {
   };
 
   return (
-    <section id="projects" className="projects">
-      <div className="container">
-        <h2 className="section-title">{t('projects.title')} <span className="text-gradient">{t('projects.title_highlight')}</span></h2>
-        <p className="section-subtitle">{t('projects.subtitle')}</p>
-        
-        <div className="projects-grid">
-          {projectsData.slice(0, visibleCount).map((project, index) => (
-            <div key={project.id} className="project-card glass reveal" style={{ transitionDelay: `${index * 0.1}s` }}>
-              {project.image ? (
-                <div className="project-image-wrapper">
-                  <img src={project.image} alt={t(`projects.p${project.id}.title`)} style={{ width: '100%', height: '200px', objectFit: 'cover', borderTopLeftRadius: '20px', borderTopRightRadius: '20px' }} />
-                </div>
-              ) : (
-                <div className="project-image-placeholder"></div>
-              )}
-              <div className="project-info">
-                <span className="project-category">{project.category}</span>
-                <h3 className="project-title">{t(`projects.p${project.id}.title`)}</h3>
-                <p className="project-desc">{t(`projects.p${project.id}.desc`)}</p>
-                <div className="project-tech">
-                  {project.tech.map((t_tech, index) => (
-                    <span key={index} className="tech-tag">{t_tech}</span>
-                  ))}
-                </div>
-                <a href={project.link} target="_blank" rel="noopener noreferrer" className="project-link">Lihat Proyek &rarr;</a>
+    <div className="projects-content">
+      <div className="projects-grid">
+        {projectsData.slice(0, visibleCount).map((project, index) => (
+          <div key={project.id} className="project-card glass reveal" style={{ transitionDelay: `${index * 0.1}s` }}>
+            {project.image ? (
+              <div className="project-image-wrapper">
+                <img src={project.image} alt={t(`projects.p${project.id}.title`)} style={{ width: '100%', height: '200px', objectFit: 'cover', borderTopLeftRadius: '20px', borderTopRightRadius: '20px' }} />
               </div>
+            ) : (
+              <div className="project-image-placeholder"></div>
+            )}
+            <div className="project-info">
+              <span className="project-category">{project.category}</span>
+              <h3 className="project-title">{t(`projects.p${project.id}.title`)}</h3>
+              <p className="project-desc">{t(`projects.p${project.id}.desc`)}</p>
+              <div className="project-tech">
+                {project.tech.map((t_tech, index) => (
+                  <span key={index} className="tech-tag">{t_tech}</span>
+                ))}
+              </div>
+              <a href={project.link} target="_blank" rel="noopener noreferrer" className="project-link">Lihat Proyek &rarr;</a>
             </div>
-          ))}
-        </div>
-
-        {visibleCount < projectsData.length && (
-          <div style={{ textAlign: 'center', marginTop: '3rem' }}>
-            <button className="btn btn-outline" onClick={handleSeeMore}>
-              {t('projects.see_more')}
-            </button>
           </div>
-        )}
+        ))}
       </div>
-    </section>
+
+      {visibleCount < projectsData.length && (
+        <div style={{ textAlign: 'center', marginTop: '3rem' }}>
+          <button className="btn btn-outline" onClick={handleSeeMore}>
+            {t('projects.see_more')}
+          </button>
+        </div>
+      )}
+    </div>
   );
 };
 

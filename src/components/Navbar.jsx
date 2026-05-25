@@ -56,8 +56,9 @@ const Navbar = () => {
         <ul className={`nav-links ${isMenuOpen ? 'open' : ''}`}>
           <li><a href="#home" onClick={() => setIsMenuOpen(false)}>{t('nav.home')}</a></li>
           <li><a href="#about" onClick={() => setIsMenuOpen(false)}>{t('nav.about')}</a></li>
-          <li><a href="#projects" onClick={() => setIsMenuOpen(false)}>{t('nav.projects')}</a></li>
-          <li><a href="#sertifikat" onClick={() => setIsMenuOpen(false)}>{t('nav.certificates')}</a></li>
+          <li><a href="#showcase" onClick={() => { setIsMenuOpen(false); window.dispatchEvent(new CustomEvent('changeShowcaseTab', { detail: 'projects' })); }}>{t('nav.projects')}</a></li>
+          <li><a href="#showcase" onClick={() => { setIsMenuOpen(false); window.dispatchEvent(new CustomEvent('changeShowcaseTab', { detail: 'certificates' })); }}>{t('nav.certificates')}</a></li>
+          <li><a href="#showcase" onClick={() => { setIsMenuOpen(false); window.dispatchEvent(new CustomEvent('changeShowcaseTab', { detail: 'techstack' })); }}>{t('nav.techstack')}</a></li>
           <li><a href="#contact" onClick={() => setIsMenuOpen(false)}>{t('nav.contact')}</a></li>
         </ul>
 

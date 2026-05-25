@@ -9,10 +9,19 @@ const translations = {
     'nav.about': 'Tentang',
     'nav.projects': 'Projek',
     'nav.certificates': 'Sertifikat',
+    'nav.techstack': 'Tech Stack',
     'nav.contact': 'Kontak',
 
+    // Showcase
+    'showcase.title': 'Portfolio',
+    'showcase.title_highlight': 'Showcase',
+    'showcase.subtitle': 'Jelajahi perjalanan saya melalui projek, sertifikasi, dan keahlian teknis.',
+    'showcase.tab.projects': 'Projek',
+    'showcase.tab.certificates': 'Sertifikat',
+    'showcase.tab.techstack': 'Tech Stack',
+
     // Hero
-    'hero.greeting': 'Halo, Saya Atama Cahya',
+    'hero.greeting.prefix': 'Halo, Saya ',
     'hero.title_1': 'Vibe Code Is My',
     'hero.title_2': 'Life Style',
     'hero.tag.dev': 'Pengembang Web',
@@ -101,10 +110,19 @@ const translations = {
     'nav.about': 'About',
     'nav.projects': 'Projects',
     'nav.certificates': 'Certificates',
+    'nav.techstack': 'Tech Stack',
     'nav.contact': 'Contact',
 
+    // Showcase
+    'showcase.title': 'Portfolio',
+    'showcase.title_highlight': 'Showcase',
+    'showcase.subtitle': 'Explore my journey through projects, certifications, and technical expertise.',
+    'showcase.tab.projects': 'Projects',
+    'showcase.tab.certificates': 'Certificates',
+    'showcase.tab.techstack': 'Tech Stack',
+
     // Hero
-    'hero.greeting': 'Hello, I am Atama Cahya',
+    'hero.greeting.prefix': 'Hello, I am ',
     'hero.title_1': 'Vibe Code Is My',
     'hero.title_2': 'Life Style',
     'hero.tag.skills': 'Core Skills',

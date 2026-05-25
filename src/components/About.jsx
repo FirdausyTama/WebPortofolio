@@ -43,27 +43,6 @@ const About = () => {
           </div>
         </div>
 
-        <div className="tech-stack glass reveal" style={{ transitionDelay: '0.4s' }}>
-          <h3>{t('about.tech_stack')}</h3>
-          <div className="skills">
-            <span className="skill-tag">React</span>
-            <span className="skill-tag">JavaScript</span>
-            <span className="skill-tag">CSS3 & HTML5</span>
-            <span className="skill-tag">UI/UX Design</span>
-            <span className="skill-tag">Node.js</span>
-            <span className="skill-tag">Python</span>
-            <span className="skill-tag">Figma</span>
-            <span className="skill-tag">Tailwind CSS</span>
-            <span className="skill-tag">Bootstrap</span>
-            <span className="skill-tag">Git & GitHub</span>
-            <span className="skill-tag">TypeScript</span>
-            <span className="skill-tag">Next.js</span>
-            <span className="skill-tag">PHP</span>
-            <span className="skill-tag">Express.js</span>
-            <span className="skill-tag">Laravel</span>
-            <span className="skill-tag">MySQL</span>
-          </div>
-        </div>
       </div>
     </section>
   );

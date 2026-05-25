@@ -3,15 +3,33 @@ import Lanyard from './Lanyard';
 import LightRays from './LightRays';
 import './Hero.css';
 import { useLanguage } from '../context/LanguageContext';
+import { TypeAnimation } from 'react-type-animation';
 
 const Hero = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <section id="home" className="hero">
       <div className="container hero-container">
         <div className="hero-content animate-fade-up">
-          <p className="greeting">{t('hero.greeting')}</p>
+          <p className="greeting" style={{ minHeight: '30px' }}>
+            {t('hero.greeting.prefix')}
+            <TypeAnimation
+              key={language} // Forces re-render on language change
+              sequence={[
+                'Atama Cahya',
+                2000,
+                t('hero.tag.open'),
+                2000,
+                t('hero.tag.dev'),
+                2000
+              ]}
+              wrapper="span"
+              speed={50}
+              repeat={Infinity}
+              style={{ fontWeight: 'bold', color: 'var(--text-primary)' }}
+            />
+          </p>
           <h1 className="hero-title">
             {t('hero.title_1')}<br />
             <span className="text-rgb">{t('hero.title_2')}</span>
