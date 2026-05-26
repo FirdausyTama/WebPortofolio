@@ -86,7 +86,7 @@ const ChatBot = () => {
       window.dispatchEvent(new CustomEvent('portfolio_comments_updated'));
     };
 
-    // 1. Enter Admin Mode / List Comments
+    // 1. Enter Admin Mode / List Pinned Comments
     if (text === '/admin' || text === '/admin-mode' || text === '/atama-admin') {
       const sorted = getSortedComments();
       const pinnedComments = sorted.filter(c => c.isPinned);
@@ -107,7 +107,7 @@ const ChatBot = () => {
           : "*(No pinned comments currently)*\n";
       } else {
         pinnedComments.forEach((c) => {
-          listStr += `• **${c.name}**: "${c.message}" (${getRelativeTime(c.timestamp)})\n`;
+          listStr += `• **${c.name}**: "${c.message}" (${getRelativeTime(c.timestamp)}) ${c.isVerified ? '🔵' : ''}\n`;
         });
       }
 
@@ -115,11 +115,15 @@ const ChatBot = () => {
         ? "\n**Gunakan perintah rahasia berdasarkan nama:**\n" +
           "• `/pin <nama>` : Sematkan komentar dari nama tersebut\n" +
           "• `/unpin <nama>` : Lepaskan sematan komentar dari nama tersebut\n" +
+          "• `/verif <nama>` : Berikan verifikasi ceklis biru ke nama tersebut\n" +
+          "• `/unverif <nama>` : Lepaskan verifikasi ceklis biru\n" +
           "• `/hapus <nama>` atau `/delete <nama>` : Hapus komentar dari nama tersebut\n" +
           "• `/clear` : Kosongkan seluruh komentar"
         : "\n**Use the following secret commands based on name:**\n" +
           "• `/pin <name>` : Pin comment by name\n" +
           "• `/unpin <name>` : Unpin comment by name\n" +
+          "• `/verif <name>` : Give blue checkmark verification by name\n" +
+          "• `/unverif <name>` : Remove blue checkmark verification\n" +
           "• `/delete <name>` : Delete comment by name\n" +
           "• `/clear` : Clear all comments";
 
@@ -250,7 +254,123 @@ const ChatBot = () => {
       }
     }
 
-    // 5. Delete Comment by Name
+    // 5. Verify Comment by Name (/verif)
+    if (text.startsWith('/verif ')) {
+      const nameAndSub = text.substring(7).trim();
+      const match = nameAndSub.match(/^(.+?)(?:\s+(\d+))?$/);
+      if (!match) return isID ? "⚠️ Format salah. Gunakan `/verif <nama>`." : "⚠️ Invalid format. Use `/verif <name>`.";
+      
+      const targetName = match[1].trim().toLowerCase();
+      const subIdxStr = match[2];
+      
+      const saved = localStorage.getItem('portfolio_comments_v3');
+      const raw = saved ? JSON.parse(saved) : [];
+      const matches = raw.filter(c => c.name.toLowerCase() === targetName);
+
+      if (matches.length === 0) {
+        return isID 
+          ? `⚠️ Tidak ditemukan komentar dari nama **${match[1]}**.`
+          : `⚠️ No comments found from name **${match[1]}**.`;
+      }
+
+      if (matches.length === 1) {
+        const target = matches[0];
+        const updated = raw.map(c => c.id === target.id ? { ...c, isVerified: true } : c);
+        updateRawComments(updated);
+        return isID 
+          ? `🔵 Komentar dari **${target.name}** ("${target.message}") berhasil diverifikasi dengan ceklis biru!`
+          : `🔵 Comment from **${target.name}** ("${target.message}") has been verified with a blue checkmark!`;
+      }
+
+      // If multiple matches exist
+      if (subIdxStr) {
+        const subIdx = parseInt(subIdxStr, 10) - 1;
+        if (isNaN(subIdx) || subIdx < 0 || subIdx >= matches.length) {
+          return isID
+            ? `⚠️ Pilihan tidak valid. Silakan pilih 1 hingga ${matches.length}.`
+            : `⚠️ Invalid selection. Please select between 1 and ${matches.length}.`;
+        }
+        const target = matches[subIdx];
+        const updated = raw.map(c => c.id === target.id ? { ...c, isVerified: true } : c);
+        updateRawComments(updated);
+        return isID 
+          ? `🔵 Komentar pilihan ke-${subIdxStr} dari **${target.name}** ("${target.message}") berhasil diverifikasi dengan ceklis biru!`
+          : `🔵 Selected comment #${subIdxStr} from **${target.name}** ("${target.message}") has been verified with a blue checkmark!`;
+      } else {
+        let reply = isID
+          ? `⚠️ Ditemukan **${matches.length}** komentar dengan nama **${matches[0].name}**. Silakan pilih salah satu untuk diverifikasi:\n\n`
+          : `⚠️ Found **${matches.length}** comments with the name **${matches[0].name}**. Please choose one to verify:\n\n`;
+        
+        matches.forEach((c, idx) => {
+          reply += `[${idx + 1}] "${c.message}" (${getRelativeTime(c.timestamp)}) ${c.isVerified ? '🔵' : ''}\n`;
+        });
+        
+        reply += isID
+          ? `\nKetik kembali: \`/verif ${matches[0].name} <nomor>\` (contoh: \`/verif ${matches[0].name} 1\`)`
+          : `\nType again: \`/verif ${matches[0].name} <number>\` (example: \`/verif ${matches[0].name} 1\`)`;
+        return reply;
+      }
+    }
+
+    // 6. Unverify Comment by Name (/unverif)
+    if (text.startsWith('/unverif ')) {
+      const nameAndSub = text.substring(9).trim();
+      const match = nameAndSub.match(/^(.+?)(?:\s+(\d+))?$/);
+      if (!match) return isID ? "⚠️ Format salah. Gunakan `/unverif <nama>`." : "⚠️ Invalid format. Use `/unverif <name>`.";
+      
+      const targetName = match[1].trim().toLowerCase();
+      const subIdxStr = match[2];
+      
+      const saved = localStorage.getItem('portfolio_comments_v3');
+      const raw = saved ? JSON.parse(saved) : [];
+      const matches = raw.filter(c => c.name.toLowerCase() === targetName);
+
+      if (matches.length === 0) {
+        return isID 
+          ? `⚠️ Tidak ditemukan komentar dari nama **${match[1]}**.`
+          : `⚠️ No comments found from name **${match[1]}**.`;
+      }
+
+      if (matches.length === 1) {
+        const target = matches[0];
+        const updated = raw.map(c => c.id === target.id ? { ...c, isVerified: false } : c);
+        updateRawComments(updated);
+        return isID 
+          ? `🔓 Verifikasi ceklis biru untuk komentar dari **${target.name}** ("${target.message}") berhasil dilepas!`
+          : `🔓 Blue checkmark verification for comment from **${target.name}** ("${target.message}") has been removed!`;
+      }
+
+      // If multiple matches exist
+      if (subIdxStr) {
+        const subIdx = parseInt(subIdxStr, 10) - 1;
+        if (isNaN(subIdx) || subIdx < 0 || subIdx >= matches.length) {
+          return isID
+            ? `⚠️ Pilihan tidak valid. Silakan pilih 1 hingga ${matches.length}.`
+            : `⚠️ Invalid selection. Please select between 1 and ${matches.length}.`;
+        }
+        const target = matches[subIdx];
+        const updated = raw.map(c => c.id === target.id ? { ...c, isVerified: false } : c);
+        updateRawComments(updated);
+        return isID 
+          ? `🔓 Verifikasi ceklis biru pilihan ke-${subIdxStr} dari **${target.name}** ("${target.message}") berhasil dilepas!`
+          : `🔓 Removed blue checkmark verification for selected comment #${subIdxStr} from **${target.name}** ("${target.message}")!`;
+      } else {
+        let reply = isID
+          ? `⚠️ Ditemukan **${matches.length}** komentar dengan nama **${matches[0].name}**. Silakan pilih salah satu untuk dilepas verifikasinya:\n\n`
+          : `⚠️ Found **${matches.length}** comments with the name **${matches[0].name}**. Please choose one to unverify:\n\n`;
+        
+        matches.forEach((c, idx) => {
+          reply += `[${idx + 1}] "${c.message}" (${getRelativeTime(c.timestamp)}) ${c.isVerified ? '🔵' : ''}\n`;
+        });
+        
+        reply += isID
+          ? `\nKetik kembali: \`/unverif ${matches[0].name} <nomor>\` (contoh: \`/unverif ${matches[0].name} 1\`)`
+          : `\nType again: \`/unverif ${matches[0].name} <number>\` (example: \`/unverif ${matches[0].name} 1\`)`;
+        return reply;
+      }
+    }
+
+    // 7. Delete Comment by Name
     if (text.startsWith('/delete ') || text.startsWith('/hapus ')) {
       const offset = text.startsWith('/delete ') ? 8 : 7;
       const cmdWord = text.startsWith('/delete ') ? 'delete' : 'hapus';

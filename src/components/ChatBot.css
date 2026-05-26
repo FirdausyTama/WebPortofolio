@@ -101,7 +101,7 @@
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   pointer-events: none;
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  background: rgba(10, 10, 10, 0.75) !important;
+  background: rgba(13, 11, 20, 0.94) !important;
   backdrop-filter: blur(24px) !important;
   -webkit-backdrop-filter: blur(24px) !important;
 }
@@ -116,7 +116,7 @@
 /* Header */
 .chatbot-header {
   padding: 1.2rem;
-  background: rgba(10, 10, 10, 0.8);
+  background: rgba(13, 11, 20, 0.96);
   border-bottom: 1px solid var(--glass-border);
   display: flex;
   justify-content: space-between;
@@ -323,7 +323,7 @@
 /* Form & Input Fields */
 .chatbot-input-form {
   padding: 1rem 1.2rem;
-  background: rgba(10, 10, 10, 0.9);
+  background: rgba(13, 11, 20, 0.98);
   border-top: 1px solid var(--glass-border);
   display: flex;
   gap: 0.6rem;

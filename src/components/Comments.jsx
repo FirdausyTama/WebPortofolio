@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Comments.css';
 import { useLanguage } from '../context/LanguageContext';
-import { FaComments, FaPaperPlane, FaThumbtack } from 'react-icons/fa';
+import { FaComments, FaPaperPlane, FaThumbtack, FaCheckCircle } from 'react-icons/fa';
 
 const Comments = () => {
   const { language, t } = useLanguage();
@@ -28,6 +28,7 @@ const Comments = () => {
           id: 1,
           name: "Atama",
           isAdmin: true,
+          isVerified: true,
           isPinned: true,
           message: "Thank you for visiting! If you have any questions, feel free to contact me via email or DM.",
           timestamp: adminTime.toISOString()
@@ -202,6 +203,9 @@ const Comments = () => {
                     <div className="comment-card-header-meta">
                       <div className="comment-card-author-wrapper">
                         <span className="comment-card-author">{comment.name}</span>
+                        {(comment.isVerified || comment.isAdmin) && (
+                          <FaCheckCircle className="comment-card-verified-icon" title="Verified Creator" />
+                        )}
                         {comment.isAdmin && (
                           <span className="comment-card-admin-badge">Admin</span>
                         )}
