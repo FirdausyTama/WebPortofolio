@@ -28,6 +28,20 @@
   outline: none;
 }
 
+.chatbot-fab-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 32px;
+  height: 32px;
+}
+
+.chatbot-custom-icon {
+  width: 100%;
+  height: 100%;
+  color: #ffffff; /* Contrast on primary gradient background */
+}
+
 .chatbot-fab:hover {
   transform: scale(1.1) rotate(5deg);
   box-shadow: 0 12px 40px var(--accent-glow);
@@ -86,7 +100,10 @@
   transform: translateY(20px) scale(0.95);
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   pointer-events: none;
-  border: 1px solid var(--glass-border);
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  background: rgba(10, 10, 10, 0.75) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
 }
 
 .chatbot-window.open {
@@ -423,13 +440,68 @@
   
   .chatbot-window {
     width: calc(100vw - 2rem);
-    height: 480px;
-    bottom: 70px;
+    height: 420px; /* Reduced from 480px to feel less bulky */
+    max-height: 70vh; /* Scale perfectly with viewport heights */
+    bottom: 64px;
+    border-radius: 20px;
   }
   
   .chatbot-fab {
-    width: 50px;
-    height: 50px;
+    width: 52px;
+    height: 52px;
     font-size: 1.3rem;
+  }
+
+  .chatbot-header {
+    padding: 0.8rem 1rem;
+  }
+
+  .chatbot-avatar-container {
+    width: 32px;
+    height: 32px;
+  }
+
+  .chatbot-title {
+    font-size: 0.9rem;
+  }
+
+  .chatbot-body {
+    padding: 0.8rem 1rem;
+  }
+
+  .chatbot-message-bubble {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.82rem;
+    border-radius: 14px;
+  }
+
+  .chatbot-suggestions {
+    padding: 0.6rem 1rem;
+    gap: 0.4rem;
+  }
+
+  .chatbot-suggestion-btn {
+    padding: 0.35rem 0.8rem;
+    font-size: 0.75rem;
+  }
+
+  .chatbot-input-form {
+    padding: 0.7rem 1rem;
+  }
+
+  .chatbot-input-field {
+    padding: 0.5rem 1rem;
+    font-size: 0.82rem;
+  }
+
+  .chatbot-submit-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 0.85rem;
+  }
+
+  .chatbot-fab-icon-container {
+    width: 26px;
+    height: 26px;
   }
 }

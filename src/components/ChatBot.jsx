@@ -279,7 +279,33 @@ const ChatBot = () => {
         aria-label="Chat with Assistant"
         title="Atama AI Assistant"
       >
-        {isOpen ? <FaTimes /> : <FaComments />}
+        {isOpen ? (
+          <FaTimes />
+        ) : (
+          <div className="chatbot-fab-icon-container">
+            <svg 
+              viewBox="0 0 100 100" 
+              fill="none" 
+              xmlns="http://www.w3.org/2000/svg"
+              className="chatbot-custom-icon"
+            >
+              <path d="M22,45 A 7,7 0 0,0 22,59" stroke="currentColor" strokeWidth="6" strokeLinecap="round" />
+              <path d="M78,45 A 7,7 0 0,1 78,59" stroke="currentColor" strokeWidth="6" strokeLinecap="round" />
+              <line x1="66" y1="30" x2="66" y2="16" stroke="currentColor" strokeWidth="6" strokeLinecap="round" />
+              <circle cx="66" cy="11" r="4.5" fill="currentColor" />
+              <path 
+                d="M36,74 L20,85 L26,70 A 14,14 0 0,1 22,60 L22,44 A 14,14 0 0,1 36,30 L64,30 A 14,14 0 0,1 78,44 L78,60 A 14,14 0 0,1 64,74 Z" 
+                stroke="currentColor" 
+                strokeWidth="6" 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+              />
+              <circle cx="38" cy="52" r="4.5" fill="currentColor" />
+              <circle cx="50" cy="52" r="4.5" fill="currentColor" />
+              <circle cx="62" cy="52" r="4.5" fill="currentColor" />
+            </svg>
+          </div>
+        )}
         {!isOpen && <span className="chatbot-pulse-ring"></span>}
       </button>
 
