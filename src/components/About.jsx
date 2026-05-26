@@ -24,13 +24,20 @@ const About = () => {
         <div className="about-content">
           <div className="about-image-wrapper reveal">
             <div className="about-image glass">
+              <div className="corner-triangle">
+                <div className="corner-triangle-text">
+                  <span>Open</span>
+                
+                  <span>To Work!</span>
+                </div>
+              </div>
               <img src={fotoDiri} alt="Foto Profesional" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             </div>
           </div>
           <div className="about-text glass reveal" style={{ transitionDelay: '0.2s' }}>
             <h3>{t('about.journey')}</h3>
-            <p>{t('about.p1')}</p>
-            <p>{t('about.p2')}</p>
+            <p dangerouslySetInnerHTML={{ __html: t('about.p1') }}></p>
+            <p dangerouslySetInnerHTML={{ __html: t('about.p2') }}></p>
 
             <div className="about-education" style={{ marginTop: '2.5rem' }}>
               <h3>{t('about.education')}</h3>

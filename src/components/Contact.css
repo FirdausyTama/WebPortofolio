@@ -4,10 +4,17 @@
 
 .contact-content {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 3rem;
-  max-width: 1000px;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 2.5rem;
+  max-width: 1200px;
   margin: 0 auto;
+  align-items: stretch;
+}
+
+.contact-content > .reveal {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .contact-info {
@@ -15,6 +22,14 @@
   border-radius: 20px;
   display: flex;
   flex-direction: column;
+}
+
+.contact-form-title {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+  margin-bottom: 0.5rem;
 }
 
 .contact-info h3 {
@@ -62,43 +77,229 @@
   color: var(--accent-color);
 }
 
-.contact-form {
-  padding: 3rem;
-  border-radius: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.form-group label {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  font-weight: 600;
-}
-
-.form-group input,
-.form-group textarea {
+.contact-card-left {
   width: 100%;
-  padding: 1rem;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: 100%;
+  background: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  display: flex;
+  flex-direction: column;
+}
+
+.contact-card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.contact-share-icon {
+  color: var(--text-secondary);
+  font-size: 1.15rem;
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.contact-share-icon:hover {
+  color: var(--accent-color);
+  filter: drop-shadow(0 0 5px var(--accent-glow));
+}
+
+.contact-card-desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.contact-form-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+/* Form Group with Inside Icon */
+.form-group-with-icon {
+  position: relative;
+  width: 100%;
+}
+
+.input-field-icon {
+  position: absolute;
+  left: 1.1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  pointer-events: none;
+  transition: var(--transition-smooth);
+}
+
+.input-field-icon.message-icon {
+  top: 1.1rem;
+  transform: translateY(0);
+}
+
+.contact-card-input,
+.contact-card-textarea {
+  width: 100%;
   background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 0.85rem 1.1rem 0.85rem 2.8rem; /* Padding left 2.8rem for icons! */
   color: var(--text-primary);
   font-family: var(--font-body);
-  transition: var(--transition-smooth);
+  font-size: 0.92rem;
   outline: none;
+  transition: var(--transition-smooth);
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
+.contact-card-input::placeholder,
+.contact-card-textarea::placeholder {
+  color: #50506a;
+}
+
+.contact-card-input:focus,
+.contact-card-textarea:focus {
   border-color: var(--accent-color);
   background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.contact-card-input:focus ~ .input-field-icon,
+.contact-card-textarea:focus ~ .input-field-icon,
+.form-group-with-icon:focus-within .input-field-icon {
+  color: var(--accent-color);
+  filter: drop-shadow(0 0 4px var(--accent-glow));
+}
+
+.contact-card-textarea {
+  resize: vertical;
+}
+
+.btn-submit-message {
+  cursor: pointer;
+}
+
+/* Connect With Me Divider */
+.connect-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  margin: 1.8rem 0 1.2rem;
+}
+
+.connect-divider-line {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.08);
+  flex-grow: 1;
+}
+
+.connect-divider-text {
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-secondary);
+}
+
+/* Premium Social Media Link Cards */
+.connect-cards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.connect-social-card {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.015);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 0.8rem 1.1rem;
+  text-decoration: none;
+  transition: var(--transition-smooth);
+}
+
+.connect-social-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.social-box-icon {
+  font-size: 1.45rem;
+  margin-right: 0.95rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: var(--transition-smooth);
+}
+
+.social-box-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  text-align: left;
+}
+
+.social-box-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.social-box-subtitle {
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+}
+
+/* Specific Card Hover Glow Styles (Glow aligns with brand identities) */
+.linkedin-box:hover {
+  border-color: rgba(0, 119, 181, 0.35);
+  box-shadow: 0 4px 18px rgba(0, 119, 181, 0.18);
+}
+.linkedin-box:hover .social-box-icon {
+  filter: drop-shadow(0 0 5px rgba(0, 119, 181, 0.6));
+}
+
+.instagram-box:hover {
+  border-color: rgba(225, 48, 108, 0.35);
+  box-shadow: 0 4px 18px rgba(225, 48, 108, 0.18);
+}
+.instagram-box:hover .social-box-icon {
+  filter: drop-shadow(0 0 5px rgba(225, 48, 108, 0.6));
+}
+
+.github-box:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 18px rgba(255, 255, 255, 0.1);
+}
+.github-box:hover .social-box-icon {
+  filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.6));
+}
+
+.linkedin-brand {
+  color: #0077B5;
+}
+
+.instagram-brand {
+  color: #E1306C;
+}
+
+.github-brand {
+  color: #ffffff;
+}
+
+.connect-social-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9rem;
 }
 
 .footer-copyright {
@@ -116,8 +317,33 @@
     gap: 2rem;
   }
   
-  .contact-info,
-  .contact-form {
+  .contact-card-left {
     padding: 1.5rem;
   }
+  
+  .connect-social-row {
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+  }
+}
+
+/* Premium plain white Kirim Pesan button style */
+.btn-submit-message {
+  background: #ffffff !important;
+  color: #0d0b14 !important; /* Dark text for legibility on white bg */
+  border: 1px solid #ffffff !important;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15) !important;
+  font-weight: 700;
+  transition: var(--transition-smooth) !important;
+}
+
+.btn-submit-message:hover {
+  background: rgba(255, 255, 255, 0.88) !important;
+  color: #0d0b14 !important;
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.35) !important;
+  transform: translateY(-2px) !important;
+}
+
+.btn-submit-message .comments-submit-icon {
+  color: #0d0b14 !important;
 }

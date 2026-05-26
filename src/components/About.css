@@ -126,3 +126,41 @@
     margin-top: 2rem;
   }
 }
+
+/* Solid Corner Triangle (Open to Work) */
+.corner-triangle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+  clip-path: polygon(0 0, 100% 0, 0 100%);
+  z-index: 5;
+  color: #ffffff;
+  pointer-events: none;
+  filter: drop-shadow(0 4px 10px rgba(46, 204, 113, 0.45)); /* Glow shadow applied to the triangle itself! */
+}
+
+.corner-triangle-text {
+  position: absolute;
+  top: 18px;
+  left: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transform: rotate(-45deg);
+  width: 60px;
+  line-height: 1.15;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #ffffff;
+}
+
+.corner-triangle-text span {
+  font-size: 0.65rem;
+  letter-spacing: 0.5px;
+  display: block;
+}

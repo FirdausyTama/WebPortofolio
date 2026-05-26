@@ -53,6 +53,263 @@ const ChatBot = () => {
     const text = userInput.toLowerCase().trim();
     const isID = language === 'ID';
 
+    // -------------------------------------------------------------
+    // SECRET ADMIN COMMANDS
+    // -------------------------------------------------------------
+    const getSortedComments = () => {
+      const saved = localStorage.getItem('portfolio_comments_v3');
+      const list = saved ? JSON.parse(saved) : [];
+      return list.sort((a, b) => {
+        if (a.isPinned && !b.isPinned) return -1;
+        if (!a.isPinned && b.isPinned) return 1;
+        return new Date(b.timestamp) - new Date(a.timestamp);
+      });
+    };
+
+    const getRelativeTime = (isoString) => {
+      const now = new Date();
+      const past = new Date(isoString);
+      const diffMs = now - past;
+      if (diffMs < 0) return isID ? "baru saja" : "just now";
+      const diffSec = Math.floor(diffMs / 1000);
+      const diffMin = Math.floor(diffSec / 60);
+      const diffHr = Math.floor(diffMin / 60);
+      const diffDay = Math.floor(diffHr / 24);
+      if (diffSec < 60) return isID ? "baru saja" : "just now";
+      if (diffMin < 60) return isID ? `${diffMin}m yang lalu` : `${diffMin}m ago`;
+      if (diffHr < 24) return isID ? `${diffHr}j yang lalu` : `${diffHr}h ago`;
+      return isID ? `${diffDay} hari yang lalu` : `${diffDay}d ago`;
+    };
+
+    const updateRawComments = (updatedList) => {
+      localStorage.setItem('portfolio_comments_v3', JSON.stringify(updatedList));
+      window.dispatchEvent(new CustomEvent('portfolio_comments_updated'));
+    };
+
+    // 1. Enter Admin Mode / List Comments
+    if (text === '/admin' || text === '/admin-mode' || text === '/atama-admin') {
+      const sorted = getSortedComments();
+      const pinnedComments = sorted.filter(c => c.isPinned);
+
+      if (sorted.length === 0) {
+        return isID 
+          ? "🔑 **ADMIN PANEL ATAMA** 🔑\n\nBelum ada komentar saat ini.\n\nGunakan perintah berikut:\n• `/clear` : Kosongkan seluruh komentar"
+          : "🔑 **ATAMA ADMIN PANEL** 🔑\n\nThere are no comments currently.\n\nUse command:\n• `/clear` : Clear all comments";
+      }
+
+      let listStr = isID 
+        ? "🔑 **ADMIN PANEL ATAMA** 🔑\n\n📌 **Komentar yang disematkan saat ini:**\n\n"
+        : "🔑 **ATAMA ADMIN PANEL** 🔑\n\n📌 **Currently pinned comments:**\n\n";
+
+      if (pinnedComments.length === 0) {
+        listStr += isID 
+          ? "*(Belum ada komentar yang disematkan)*\n"
+          : "*(No pinned comments currently)*\n";
+      } else {
+        pinnedComments.forEach((c) => {
+          listStr += `• **${c.name}**: "${c.message}" (${getRelativeTime(c.timestamp)})\n`;
+        });
+      }
+
+      listStr += isID
+        ? "\n**Gunakan perintah rahasia berdasarkan nama:**\n" +
+          "• `/pin <nama>` : Sematkan komentar dari nama tersebut\n" +
+          "• `/unpin <nama>` : Lepaskan sematan komentar dari nama tersebut\n" +
+          "• `/hapus <nama>` atau `/delete <nama>` : Hapus komentar dari nama tersebut\n" +
+          "• `/clear` : Kosongkan seluruh komentar"
+        : "\n**Use the following secret commands based on name:**\n" +
+          "• `/pin <name>` : Pin comment by name\n" +
+          "• `/unpin <name>` : Unpin comment by name\n" +
+          "• `/delete <name>` : Delete comment by name\n" +
+          "• `/clear` : Clear all comments";
+
+      return listStr;
+    }
+
+    // 2. Clear All Comments
+    if (text === '/clear') {
+      updateRawComments([]);
+      return isID
+        ? "🧹 **Semua data komentar berhasil dikosongkan!** Buku tamu kini bersih dari komentar."
+        : "🧹 **All comments have been successfully cleared!** The guestbook is now empty.";
+    }
+
+    // 3. Pin Comment by Name
+    if (text.startsWith('/pin ')) {
+      const nameAndSub = text.substring(5).trim();
+      const match = nameAndSub.match(/^(.+?)(?:\s+(\d+))?$/);
+      if (!match) return isID ? "⚠️ Format salah. Gunakan `/pin <nama>`." : "⚠️ Invalid format. Use `/pin <name>`.";
+      
+      const targetName = match[1].trim().toLowerCase();
+      const subIdxStr = match[2];
+      
+      const saved = localStorage.getItem('portfolio_comments_v3');
+      const raw = saved ? JSON.parse(saved) : [];
+      const matches = raw.filter(c => c.name.toLowerCase() === targetName);
+
+      if (matches.length === 0) {
+        return isID 
+          ? `⚠️ Tidak ditemukan komentar dari nama **${match[1]}**.`
+          : `⚠️ No comments found from name **${match[1]}**.`;
+      }
+
+      if (matches.length === 1) {
+        const target = matches[0];
+        const updated = raw.map(c => c.id === target.id ? { ...c, isPinned: true } : c);
+        updateRawComments(updated);
+        return isID 
+          ? `📌 Komentar dari **${target.name}** ("${target.message}") berhasil disematkan!`
+          : `📌 Comment from **${target.name}** ("${target.message}") has been pinned!`;
+      }
+
+      // If multiple matches exist
+      if (subIdxStr) {
+        const subIdx = parseInt(subIdxStr, 10) - 1;
+        if (isNaN(subIdx) || subIdx < 0 || subIdx >= matches.length) {
+          return isID
+            ? `⚠️ Pilihan tidak valid. Silakan pilih 1 hingga ${matches.length}.`
+            : `⚠️ Invalid selection. Please select between 1 and ${matches.length}.`;
+        }
+        const target = matches[subIdx];
+        const updated = raw.map(c => c.id === target.id ? { ...c, isPinned: true } : c);
+        updateRawComments(updated);
+        return isID 
+          ? `📌 Komentar pilihan ke-${subIdxStr} dari **${target.name}** ("${target.message}") berhasil disematkan!`
+          : `📌 Selected comment #${subIdxStr} from **${target.name}** ("${target.message}") has been pinned!`;
+      } else {
+        let reply = isID
+          ? `⚠️ Ditemukan **${matches.length}** komentar dengan nama **${matches[0].name}**. Silakan pilih salah satu:\n\n`
+          : `⚠️ Found **${matches.length}** comments with the name **${matches[0].name}**. Please choose one:\n\n`;
+        
+        matches.forEach((c, idx) => {
+          reply += `[${idx + 1}] "${c.message}" (${getRelativeTime(c.timestamp)}) ${c.isPinned ? '📌' : ''}\n`;
+        });
+        
+        reply += isID
+          ? `\nKetik kembali: \`/pin ${matches[0].name} <nomor>\` (contoh: \`/pin ${matches[0].name} 1\`)`
+          : `\nType again: \`/pin ${matches[0].name} <number>\` (example: \`/pin ${matches[0].name} 1\`)`;
+        return reply;
+      }
+    }
+
+    // 4. Unpin Comment by Name
+    if (text.startsWith('/unpin ')) {
+      const nameAndSub = text.substring(7).trim();
+      const match = nameAndSub.match(/^(.+?)(?:\s+(\d+))?$/);
+      if (!match) return isID ? "⚠️ Format salah. Gunakan `/unpin <nama>`." : "⚠️ Invalid format. Use `/unpin <name>`.";
+      
+      const targetName = match[1].trim().toLowerCase();
+      const subIdxStr = match[2];
+      
+      const saved = localStorage.getItem('portfolio_comments_v3');
+      const raw = saved ? JSON.parse(saved) : [];
+      const matches = raw.filter(c => c.name.toLowerCase() === targetName);
+
+      if (matches.length === 0) {
+        return isID 
+          ? `⚠️ Tidak ditemukan komentar dari nama **${match[1]}**.`
+          : `⚠️ No comments found from name **${match[1]}**.`;
+      }
+
+      if (matches.length === 1) {
+        const target = matches[0];
+        const updated = raw.map(c => c.id === target.id ? { ...c, isPinned: false } : c);
+        updateRawComments(updated);
+        return isID 
+          ? `🔓 Sematan komentar dari **${target.name}** ("${target.message}") berhasil dilepas!`
+          : `🔓 Comment from **${target.name}** ("${target.message}") has been unpinned!`;
+      }
+
+      // If multiple matches exist
+      if (subIdxStr) {
+        const subIdx = parseInt(subIdxStr, 10) - 1;
+        if (isNaN(subIdx) || subIdx < 0 || subIdx >= matches.length) {
+          return isID
+            ? `⚠️ Pilihan tidak valid. Silakan pilih 1 hingga ${matches.length}.`
+            : `⚠️ Invalid selection. Please select between 1 and ${matches.length}.`;
+        }
+        const target = matches[subIdx];
+        const updated = raw.map(c => c.id === target.id ? { ...c, isPinned: false } : c);
+        updateRawComments(updated);
+        return isID 
+          ? `🔓 Sematan komentar pilihan ke-${subIdxStr} dari **${target.name}** ("${target.message}") berhasil dilepas!`
+          : `🔓 Unpinned selected comment #${subIdxStr} from **${target.name}** ("${target.message}")!`;
+      } else {
+        let reply = isID
+          ? `⚠️ Ditemukan **${matches.length}** komentar dengan nama **${matches[0].name}**. Silakan pilih salah satu:\n\n`
+          : `⚠️ Found **${matches.length}** comments with the name **${matches[0].name}**. Please choose one:\n\n`;
+        
+        matches.forEach((c, idx) => {
+          reply += `[${idx + 1}] "${c.message}" (${getRelativeTime(c.timestamp)}) ${c.isPinned ? '📌' : ''}\n`;
+        });
+        
+        reply += isID
+          ? `\nKetik kembali: \`/unpin ${matches[0].name} <nomor>\` (contoh: \`/unpin ${matches[0].name} 1\`)`
+          : `\nType again: \`/unpin ${matches[0].name} <number>\` (example: \`/unpin ${matches[0].name} 1\`)`;
+        return reply;
+      }
+    }
+
+    // 5. Delete Comment by Name
+    if (text.startsWith('/delete ') || text.startsWith('/hapus ')) {
+      const offset = text.startsWith('/delete ') ? 8 : 7;
+      const cmdWord = text.startsWith('/delete ') ? 'delete' : 'hapus';
+      const nameAndSub = text.substring(offset).trim();
+      const match = nameAndSub.match(/^(.+?)(?:\s+(\d+))?$/);
+      if (!match) return isID ? `⚠️ Format salah. Gunakan \`/${cmdWord} <nama>\`.` : `⚠️ Invalid format. Use \`/${cmdWord} <name>\`.`;
+      
+      const targetName = match[1].trim().toLowerCase();
+      const subIdxStr = match[2];
+      
+      const saved = localStorage.getItem('portfolio_comments_v3');
+      const raw = saved ? JSON.parse(saved) : [];
+      const matches = raw.filter(c => c.name.toLowerCase() === targetName);
+
+      if (matches.length === 0) {
+        return isID 
+          ? `⚠️ Tidak ditemukan komentar dari nama **${match[1]}**.`
+          : `⚠️ No comments found from name **${match[1]}**.`;
+      }
+
+      if (matches.length === 1) {
+        const target = matches[0];
+        const updated = raw.filter(c => c.id !== target.id);
+        updateRawComments(updated);
+        return isID 
+          ? `✅ Komentar dari **${target.name}** ("${target.message}") berhasil dihapus!`
+          : `✅ Comment from **${target.name}** ("${target.message}") has been deleted!`;
+      }
+
+      // If multiple matches exist
+      if (subIdxStr) {
+        const subIdx = parseInt(subIdxStr, 10) - 1;
+        if (isNaN(subIdx) || subIdx < 0 || subIdx >= matches.length) {
+          return isID
+            ? `⚠️ Pilihan tidak valid. Silakan pilih 1 hingga ${matches.length}.`
+            : `⚠️ Invalid selection. Please select between 1 and ${matches.length}.`;
+        }
+        const target = matches[subIdx];
+        const updated = raw.filter(c => c.id !== target.id);
+        updateRawComments(updated);
+        return isID 
+          ? `✅ Komentar pilihan ke-${subIdxStr} dari **${target.name}** ("${target.message}") berhasil dihapus!`
+          : `✅ Selected comment #${subIdxStr} from **${target.name}** ("${target.message}") has been deleted!`;
+      } else {
+        let reply = isID
+          ? `⚠️ Ditemukan **${matches.length}** komentar dengan nama **${matches[0].name}**. Silakan pilih salah satu untuk dihapus:\n\n`
+          : `⚠️ Found **${matches.length}** comments with the name **${matches[0].name}**. Please choose one to delete:\n\n`;
+        
+        matches.forEach((c, idx) => {
+          reply += `[${idx + 1}] "${c.message}" (${getRelativeTime(c.timestamp)}) ${c.isPinned ? '📌' : ''}\n`;
+        });
+        
+        reply += isID
+          ? `\nKetik kembali: \`/${cmdWord} ${matches[0].name} <nomor>\` (contoh: \`/${cmdWord} ${matches[0].name} 1\`)`
+          : `\nType again: \`/${cmdWord} ${matches[0].name} <number>\` (example: \`/${cmdWord} ${matches[0].name} 1\`)`;
+        return reply;
+      }
+    }
+
     // 1. WHO IS ATAMA
     if (text.includes("siapa_atama") || text.includes("who_is_atama") || text.includes("siapa atama") || text.includes("who is atama") || text.includes("siapa dia") || text.includes("profil") || text.includes("biodata") || text.includes("tentang atama") || text.includes("about atama")) {
       return isID

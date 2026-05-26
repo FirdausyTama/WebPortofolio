@@ -1,0 +1,332 @@
+/* Comments Unified Card CSS Stylesheet (Theme Blue) - Photo-Free Edition */
+
+/* Modular card container filling 100% of grid column */
+.comments-card {
+  width: 100%;
+  max-width: 100%;
+  background: var(--glass-bg) !important;
+  border: 1px solid var(--glass-border) !important;
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header styling */
+.comments-card-header {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.comments-card-title-container {
+  display: flex;
+  align-items: center;
+}
+
+.comments-title-icon-wrapper {
+  background: rgba(0, 210, 255, 0.08);
+  border: 1px solid rgba(0, 210, 255, 0.2);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 0.8rem;
+  box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.comments-title-icon {
+  color: var(--accent-color);
+  font-size: 1.3rem;
+}
+
+.comments-card-title {
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  font-family: var(--font-heading);
+}
+
+.comments-card-count {
+  color: var(--accent-color);
+  font-weight: 700;
+}
+
+/* Form Styles */
+.comments-card-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.comments-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.comments-form-label {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.comments-required {
+  color: #ff4a4a;
+}
+
+.comments-card-input,
+.comments-card-textarea {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 0.85rem 1.1rem;
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  outline: none;
+  transition: var(--transition-smooth);
+  width: 100%;
+}
+
+.comments-card-input::placeholder,
+.comments-card-textarea::placeholder {
+  color: #50506a;
+}
+
+.comments-card-input:focus,
+.comments-card-textarea:focus {
+  border-color: var(--accent-color);
+  background: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.comments-card-textarea {
+  resize: vertical;
+}
+
+/* Full-width premium plain white submit button */
+.comments-card-submit-btn {
+  width: 100%;
+  background: #ffffff !important;
+  color: #0d0b14 !important; /* Dark text for readability on white bg */
+  padding: 0.9rem;
+  border-radius: 10px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.95rem;
+  border: 1px solid #ffffff !important;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.15) !important;
+  transition: var(--transition-smooth) !important;
+  outline: none;
+}
+
+.comments-card-submit-btn:hover {
+  transform: translateY(-2px) !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  color: #0d0b14 !important;
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.35) !important;
+}
+
+.comments-submit-icon {
+  color: #0d0b14 !important;
+  font-size: 0.85rem;
+}
+
+/* Comments List Frame Wrapper */
+.comments-card-list-wrapper {
+  margin-top: 2rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding-top: 1.5rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Frame showing exactly 3 comments at a time (Max height bounded scroll container!) */
+.comments-card-list {
+  max-height: 290px; /* Bounded height to fit exactly ~3 comments */
+  overflow-y: auto;
+  padding-right: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  flex-grow: 1;
+}
+
+/* Custom scrollbar matching original mock */
+.comments-card-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.comments-card-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.comments-card-list::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+}
+
+.comments-card-list::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-color);
+}
+
+/* Comment Item Box */
+.comment-card-item {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 1rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  animation: commentCardFadeIn 0.35s ease-out forwards;
+}
+
+@keyframes commentCardFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.comment-card-item.pinned {
+  border: 1px solid rgba(0, 210, 255, 0.25);
+  background: rgba(0, 210, 255, 0.04);
+}
+
+/* Pinned Banner Header */
+.comment-card-pinned-tag {
+  color: var(--accent-color);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.comment-card-pinned-icon {
+  font-size: 0.72rem;
+}
+
+/* Comment Inner Body */
+.comment-card-body {
+  display: flex;
+  align-items: flex-start;
+}
+
+.comment-card-avatar-wrapper {
+  margin-right: 0.9rem;
+  flex-shrink: 0;
+}
+
+.comment-card-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--text-secondary);
+  font-weight: 700;
+  font-size: 0.95rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.comment-card-avatar.admin-avatar {
+  background: rgba(0, 210, 255, 0.1);
+  border: 1px solid rgba(0, 210, 255, 0.25);
+  color: var(--accent-color);
+  box-shadow: 0 0 10px rgba(0, 210, 255, 0.15);
+  text-shadow: 0 0 8px rgba(0, 210, 255, 0.4);
+}
+
+.comment-card-content {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.comment-card-header-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.comment-card-author-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.comment-card-author {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.comment-card-admin-badge {
+  background: rgba(0, 210, 255, 0.1);
+  border: 1px solid rgba(0, 210, 255, 0.25);
+  color: var(--accent-color);
+  font-size: 0.65rem;
+  padding: 0.05rem 0.35rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.comment-card-time {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.comment-card-message {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+  word-break: break-word;
+}
+
+.comments-list-empty {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  padding: 1.5rem 0;
+}
+
+/* Mobile responsive fixes */
+@media (max-width: 768px) {
+  .comments-card {
+    padding: 1.5rem;
+    border-radius: 20px;
+  }
+
+  .comments-card-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .comments-card-title {
+    font-size: 1.2rem;
+  }
+}
