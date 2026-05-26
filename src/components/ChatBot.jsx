@@ -4,6 +4,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { 
   FaRobot, FaPaperPlane, FaTimes, FaTrashAlt, FaUser, FaExternalLinkAlt, FaComments 
 } from 'react-icons/fa';
+import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 
 const ChatBot = () => {
   const { language, t } = useLanguage();
@@ -49,14 +50,45 @@ const ChatBot = () => {
   };
 
   // Logic to process bot responses
-  const generateBotResponse = (userInput) => {
+  const generateBotResponse = async (userInput) => {
     const text = userInput.toLowerCase().trim();
     const isID = language === 'ID';
 
     // -------------------------------------------------------------
     // SECRET ADMIN COMMANDS
     // -------------------------------------------------------------
-    const getSortedComments = () => {
+    const getSortedComments = async () => {
+      if (isSupabaseConfigured) {
+        try {
+          const { data, error } = await supabase
+            .from('portfolio_comments')
+            .select('*')
+            .order('created_at', { ascending: false });
+
+          if (error) throw error;
+
+          if (data) {
+            const mapped = data.map(c => ({
+              id: c.id,
+              name: c.name,
+              message: c.message,
+              isAdmin: c.is_admin,
+              isVerified: c.is_verified,
+              isPinned: c.is_pinned,
+              timestamp: c.created_at
+            }));
+            localStorage.setItem('portfolio_comments_v3', JSON.stringify(mapped));
+            return mapped.sort((a, b) => {
+              if (a.isPinned && !b.isPinned) return -1;
+              if (!a.isPinned && b.isPinned) return 1;
+              return new Date(b.timestamp) - new Date(a.timestamp);
+            });
+          }
+        } catch (err) {
+          console.error("Error fetching comments in ChatBot:", err);
+        }
+      }
+
       const saved = localStorage.getItem('portfolio_comments_v3');
       const list = saved ? JSON.parse(saved) : [];
       return list.sort((a, b) => {
@@ -81,14 +113,14 @@ const ChatBot = () => {
       return isID ? `${diffDay} hari yang lalu` : `${diffDay}d ago`;
     };
 
-    const updateRawComments = (updatedList) => {
+    const updateRawComments = async (updatedList) => {
       localStorage.setItem('portfolio_comments_v3', JSON.stringify(updatedList));
       window.dispatchEvent(new CustomEvent('portfolio_comments_updated'));
     };
 
     // 1. Enter Admin Mode / List Pinned Comments
     if (text === '/admin' || text === '/admin-mode' || text === '/atama-admin') {
-      const sorted = getSortedComments();
+      const sorted = await getSortedComments();
       const pinnedComments = sorted.filter(c => c.isPinned);
 
       if (sorted.length === 0) {
@@ -132,7 +164,15 @@ const ChatBot = () => {
 
     // 2. Clear All Comments
     if (text === '/clear') {
-      updateRawComments([]);
+      if (isSupabaseConfigured) {
+        try {
+          const { error } = await supabase.from('portfolio_comments').delete().neq('id', 0);
+          if (error) throw error;
+        } catch (err) {
+          console.error("Error clearing comments on Supabase:", err);
+        }
+      }
+      await updateRawComments([]);
       return isID
         ? "🧹 **Semua data komentar berhasil dikosongkan!** Buku tamu kini bersih dari komentar."
         : "🧹 **All comments have been successfully cleared!** The guestbook is now empty.";
@@ -147,8 +187,7 @@ const ChatBot = () => {
       const targetName = match[1].trim().toLowerCase();
       const subIdxStr = match[2];
       
-      const saved = localStorage.getItem('portfolio_comments_v3');
-      const raw = saved ? JSON.parse(saved) : [];
+      const raw = await getSortedComments();
       const matches = raw.filter(c => c.name.toLowerCase() === targetName);
 
       if (matches.length === 0) {
@@ -159,8 +198,16 @@ const ChatBot = () => {
 
       if (matches.length === 1) {
         const target = matches[0];
+        if (isSupabaseConfigured) {
+          try {
+            const { error } = await supabase.from('portfolio_comments').update({ is_pinned: true }).eq('id', target.id);
+            if (error) throw error;
+          } catch (err) {
+            console.error("Error pinning on Supabase:", err);
+          }
+        }
         const updated = raw.map(c => c.id === target.id ? { ...c, isPinned: true } : c);
-        updateRawComments(updated);
+        await updateRawComments(updated);
         return isID 
           ? `📌 Komentar dari **${target.name}** ("${target.message}") berhasil disematkan!`
           : `📌 Comment from **${target.name}** ("${target.message}") has been pinned!`;
@@ -175,8 +222,16 @@ const ChatBot = () => {
             : `⚠️ Invalid selection. Please select between 1 and ${matches.length}.`;
         }
         const target = matches[subIdx];
+        if (isSupabaseConfigured) {
+          try {
+            const { error } = await supabase.from('portfolio_comments').update({ is_pinned: true }).eq('id', target.id);
+            if (error) throw error;
+          } catch (err) {
+            console.error("Error pinning on Supabase:", err);
+          }
+        }
         const updated = raw.map(c => c.id === target.id ? { ...c, isPinned: true } : c);
-        updateRawComments(updated);
+        await updateRawComments(updated);
         return isID 
           ? `📌 Komentar pilihan ke-${subIdxStr} dari **${target.name}** ("${target.message}") berhasil disematkan!`
           : `📌 Selected comment #${subIdxStr} from **${target.name}** ("${target.message}") has been pinned!`;
@@ -205,8 +260,7 @@ const ChatBot = () => {
       const targetName = match[1].trim().toLowerCase();
       const subIdxStr = match[2];
       
-      const saved = localStorage.getItem('portfolio_comments_v3');
-      const raw = saved ? JSON.parse(saved) : [];
+      const raw = await getSortedComments();
       const matches = raw.filter(c => c.name.toLowerCase() === targetName);
 
       if (matches.length === 0) {
@@ -217,8 +271,16 @@ const ChatBot = () => {
 
       if (matches.length === 1) {
         const target = matches[0];
+        if (isSupabaseConfigured) {
+          try {
+            const { error } = await supabase.from('portfolio_comments').update({ is_pinned: false }).eq('id', target.id);
+            if (error) throw error;
+          } catch (err) {
+            console.error("Error unpinning on Supabase:", err);
+          }
+        }
         const updated = raw.map(c => c.id === target.id ? { ...c, isPinned: false } : c);
-        updateRawComments(updated);
+        await updateRawComments(updated);
         return isID 
           ? `🔓 Sematan komentar dari **${target.name}** ("${target.message}") berhasil dilepas!`
           : `🔓 Comment from **${target.name}** ("${target.message}") has been unpinned!`;
@@ -233,8 +295,16 @@ const ChatBot = () => {
             : `⚠️ Invalid selection. Please select between 1 and ${matches.length}.`;
         }
         const target = matches[subIdx];
+        if (isSupabaseConfigured) {
+          try {
+            const { error } = await supabase.from('portfolio_comments').update({ is_pinned: false }).eq('id', target.id);
+            if (error) throw error;
+          } catch (err) {
+            console.error("Error unpinning on Supabase:", err);
+          }
+        }
         const updated = raw.map(c => c.id === target.id ? { ...c, isPinned: false } : c);
-        updateRawComments(updated);
+        await updateRawComments(updated);
         return isID 
           ? `🔓 Sematan komentar pilihan ke-${subIdxStr} dari **${target.name}** ("${target.message}") berhasil dilepas!`
           : `🔓 Unpinned selected comment #${subIdxStr} from **${target.name}** ("${target.message}")!`;
@@ -263,8 +333,7 @@ const ChatBot = () => {
       const targetName = match[1].trim().toLowerCase();
       const subIdxStr = match[2];
       
-      const saved = localStorage.getItem('portfolio_comments_v3');
-      const raw = saved ? JSON.parse(saved) : [];
+      const raw = await getSortedComments();
       const matches = raw.filter(c => c.name.toLowerCase() === targetName);
 
       if (matches.length === 0) {
@@ -275,8 +344,16 @@ const ChatBot = () => {
 
       if (matches.length === 1) {
         const target = matches[0];
+        if (isSupabaseConfigured) {
+          try {
+            const { error } = await supabase.from('portfolio_comments').update({ is_verified: true }).eq('id', target.id);
+            if (error) throw error;
+          } catch (err) {
+            console.error("Error verifying on Supabase:", err);
+          }
+        }
         const updated = raw.map(c => c.id === target.id ? { ...c, isVerified: true } : c);
-        updateRawComments(updated);
+        await updateRawComments(updated);
         return isID 
           ? `🔵 Komentar dari **${target.name}** ("${target.message}") berhasil diverifikasi dengan ceklis biru!`
           : `🔵 Comment from **${target.name}** ("${target.message}") has been verified with a blue checkmark!`;
@@ -291,8 +368,16 @@ const ChatBot = () => {
             : `⚠️ Invalid selection. Please select between 1 and ${matches.length}.`;
         }
         const target = matches[subIdx];
+        if (isSupabaseConfigured) {
+          try {
+            const { error } = await supabase.from('portfolio_comments').update({ is_verified: true }).eq('id', target.id);
+            if (error) throw error;
+          } catch (err) {
+            console.error("Error verifying on Supabase:", err);
+          }
+        }
         const updated = raw.map(c => c.id === target.id ? { ...c, isVerified: true } : c);
-        updateRawComments(updated);
+        await updateRawComments(updated);
         return isID 
           ? `🔵 Komentar pilihan ke-${subIdxStr} dari **${target.name}** ("${target.message}") berhasil diverifikasi dengan ceklis biru!`
           : `🔵 Selected comment #${subIdxStr} from **${target.name}** ("${target.message}") has been verified with a blue checkmark!`;
@@ -321,8 +406,7 @@ const ChatBot = () => {
       const targetName = match[1].trim().toLowerCase();
       const subIdxStr = match[2];
       
-      const saved = localStorage.getItem('portfolio_comments_v3');
-      const raw = saved ? JSON.parse(saved) : [];
+      const raw = await getSortedComments();
       const matches = raw.filter(c => c.name.toLowerCase() === targetName);
 
       if (matches.length === 0) {
@@ -333,8 +417,16 @@ const ChatBot = () => {
 
       if (matches.length === 1) {
         const target = matches[0];
+        if (isSupabaseConfigured) {
+          try {
+            const { error } = await supabase.from('portfolio_comments').update({ is_verified: false }).eq('id', target.id);
+            if (error) throw error;
+          } catch (err) {
+            console.error("Error unverifying on Supabase:", err);
+          }
+        }
         const updated = raw.map(c => c.id === target.id ? { ...c, isVerified: false } : c);
-        updateRawComments(updated);
+        await updateRawComments(updated);
         return isID 
           ? `🔓 Verifikasi ceklis biru untuk komentar dari **${target.name}** ("${target.message}") berhasil dilepas!`
           : `🔓 Blue checkmark verification for comment from **${target.name}** ("${target.message}") has been removed!`;
@@ -349,8 +441,16 @@ const ChatBot = () => {
             : `⚠️ Invalid selection. Please select between 1 and ${matches.length}.`;
         }
         const target = matches[subIdx];
+        if (isSupabaseConfigured) {
+          try {
+            const { error } = await supabase.from('portfolio_comments').update({ is_verified: false }).eq('id', target.id);
+            if (error) throw error;
+          } catch (err) {
+            console.error("Error unverifying on Supabase:", err);
+          }
+        }
         const updated = raw.map(c => c.id === target.id ? { ...c, isVerified: false } : c);
-        updateRawComments(updated);
+        await updateRawComments(updated);
         return isID 
           ? `🔓 Verifikasi ceklis biru pilihan ke-${subIdxStr} dari **${target.name}** ("${target.message}") berhasil dilepas!`
           : `🔓 Removed blue checkmark verification for selected comment #${subIdxStr} from **${target.name}** ("${target.message}")!`;
@@ -381,8 +481,7 @@ const ChatBot = () => {
       const targetName = match[1].trim().toLowerCase();
       const subIdxStr = match[2];
       
-      const saved = localStorage.getItem('portfolio_comments_v3');
-      const raw = saved ? JSON.parse(saved) : [];
+      const raw = await getSortedComments();
       const matches = raw.filter(c => c.name.toLowerCase() === targetName);
 
       if (matches.length === 0) {
@@ -393,8 +492,16 @@ const ChatBot = () => {
 
       if (matches.length === 1) {
         const target = matches[0];
+        if (isSupabaseConfigured) {
+          try {
+            const { error } = await supabase.from('portfolio_comments').delete().eq('id', target.id);
+            if (error) throw error;
+          } catch (err) {
+            console.error("Error deleting on Supabase:", err);
+          }
+        }
         const updated = raw.filter(c => c.id !== target.id);
-        updateRawComments(updated);
+        await updateRawComments(updated);
         return isID 
           ? `✅ Komentar dari **${target.name}** ("${target.message}") berhasil dihapus!`
           : `✅ Comment from **${target.name}** ("${target.message}") has been deleted!`;
@@ -409,8 +516,16 @@ const ChatBot = () => {
             : `⚠️ Invalid selection. Please select between 1 and ${matches.length}.`;
         }
         const target = matches[subIdx];
+        if (isSupabaseConfigured) {
+          try {
+            const { error } = await supabase.from('portfolio_comments').delete().eq('id', target.id);
+            if (error) throw error;
+          } catch (err) {
+            console.error("Error deleting on Supabase:", err);
+          }
+        }
         const updated = raw.filter(c => c.id !== target.id);
-        updateRawComments(updated);
+        await updateRawComments(updated);
         return isID 
           ? `✅ Komentar pilihan ke-${subIdxStr} dari **${target.name}** ("${target.message}") berhasil dihapus!`
           : `✅ Selected comment #${subIdxStr} from **${target.name}** ("${target.message}") has been deleted!`;
@@ -597,8 +712,8 @@ const ChatBot = () => {
     setIsTyping(true);
 
     // Simulate typing delay
-    setTimeout(() => {
-      const botResponse = generateBotResponse(userMessage);
+    setTimeout(async () => {
+      const botResponse = await generateBotResponse(userMessage);
       const botMsgObj = {
         id: Date.now() + 1,
         text: botResponse,
@@ -623,8 +738,8 @@ const ChatBot = () => {
     setMessages(prev => [...prev, userMsgObj]);
     setIsTyping(true);
 
-    setTimeout(() => {
-      const botResponse = generateBotResponse(value);
+    setTimeout(async () => {
+      const botResponse = await generateBotResponse(value);
       const botMsgObj = {
         id: Date.now() + 1,
         text: botResponse,

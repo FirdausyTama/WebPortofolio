@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Comments.css';
 import { useLanguage } from '../context/LanguageContext';
 import { FaComments, FaPaperPlane, FaThumbtack, FaCheckCircle } from 'react-icons/fa';
+import { supabase, isSupabaseConfigured } from '../lib/supabaseClient';
 
 const Comments = () => {
   const { language, t } = useLanguage();
@@ -11,17 +12,47 @@ const Comments = () => {
   const [message, setMessage] = useState('');
   const [comments, setComments] = useState([]);
 
-  // Load comments from localStorage or initialize with default comments
-  useEffect(() => {
+  // Fetch comments from either Supabase or LocalStorage
+  const fetchComments = async () => {
+    if (isSupabaseConfigured) {
+      try {
+        const { data, error } = await supabase
+          .from('portfolio_comments')
+          .select('*')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (data) {
+          const mappedComments = data.map(c => ({
+            id: c.id,
+            name: c.name,
+            message: c.message,
+            isAdmin: c.is_admin,
+            isVerified: c.is_verified,
+            isPinned: c.is_pinned,
+            timestamp: c.created_at
+          }));
+          setComments(mappedComments);
+          // Sync to localStorage as backup
+          localStorage.setItem('portfolio_comments_v3', JSON.stringify(mappedComments));
+        }
+      } catch (err) {
+        console.error('Error fetching comments from Supabase:', err);
+        loadFromLocalStorageFallback();
+      }
+    } else {
+      loadFromLocalStorageFallback();
+    }
+  };
+
+  const loadFromLocalStorageFallback = () => {
     const savedComments = localStorage.getItem('portfolio_comments_v3');
     if (savedComments) {
       setComments(JSON.parse(savedComments));
     } else {
       const adminTime = new Date();
       adminTime.setDate(adminTime.getDate() - 3);
-
-      const userTime = new Date();
-      userTime.setHours(userTime.getHours() - 24);
 
       const defaultComments = [
         {
@@ -32,23 +63,36 @@ const Comments = () => {
           isPinned: true,
           message: "Thank you for visiting! If you have any questions, feel free to contact me via email or DM.",
           timestamp: adminTime.toISOString()
-        },
-        
+        }
       ];
       setComments(defaultComments);
       localStorage.setItem('portfolio_comments_v3', JSON.stringify(defaultComments));
     }
+  };
+
+  // Initial load and Realtime Subscription
+  useEffect(() => {
+    fetchComments();
+
+    if (!isSupabaseConfigured) return;
+
+    // Listen to changes in the database globally (inserts, updates, deletes)
+    const channel = supabase
+      .channel('realtime:portfolio_comments')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'portfolio_comments' }, () => {
+        fetchComments();
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, []);
 
-  // Listen for admin changes from the ChatBot
+  // Listen for admin changes from the ChatBot (for LocalStorage fallback mode)
   useEffect(() => {
     const handleCommentsUpdate = () => {
-      const savedComments = localStorage.getItem('portfolio_comments_v3');
-      if (savedComments) {
-        setComments(JSON.parse(savedComments));
-      } else {
-        setComments([]);
-      }
+      fetchComments();
     };
     window.addEventListener('portfolio_comments_updated', handleCommentsUpdate);
     return () => window.removeEventListener('portfolio_comments_updated', handleCommentsUpdate);
@@ -88,26 +132,52 @@ const Comments = () => {
   };
 
   // Submit new comment
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!name.trim() || !message.trim()) return;
 
-    const newComment = {
-      id: Date.now(),
-      name: name.trim(),
-      isAdmin: false,
-      isPinned: false,
-      message: message.trim(),
-      timestamp: new Date().toISOString()
-    };
+    const nameVal = name.trim();
+    const msgVal = message.trim();
 
-    const updatedComments = [newComment, ...comments];
-    setComments(updatedComments);
-    localStorage.setItem('portfolio_comments_v3', JSON.stringify(updatedComments));
+    if (isSupabaseConfigured) {
+      try {
+        const { error } = await supabase
+          .from('portfolio_comments')
+          .insert([{
+            name: nameVal,
+            message: msgVal,
+            is_admin: false,
+            is_verified: false,
+            is_pinned: false
+          }]);
+
+        if (error) throw error;
+        fetchComments();
+      } catch (err) {
+        console.error('Error inserting comment to Supabase:', err);
+        saveToLocalStorage(nameVal, msgVal);
+      }
+    } else {
+      saveToLocalStorage(nameVal, msgVal);
+    }
 
     // Clear form
     setName('');
     setMessage('');
+  };
+
+  const saveToLocalStorage = (nameVal, msgVal) => {
+    const newComment = {
+      id: Date.now(),
+      name: nameVal,
+      isAdmin: false,
+      isPinned: false,
+      message: msgVal,
+      timestamp: new Date().toISOString()
+    };
+    const updatedComments = [newComment, ...comments];
+    setComments(updatedComments);
+    localStorage.setItem('portfolio_comments_v3', JSON.stringify(updatedComments));
   };
 
   // Sort comments: pinned comments always stay at the top, others sorted by newest first
