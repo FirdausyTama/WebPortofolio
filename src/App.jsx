@@ -5,6 +5,7 @@ import Hero from './components/Hero';
 import About from './components/About';
 import Showcase from './components/Showcase';
 import Contact from './components/Contact';
+import ChatBot from './components/ChatBot';
 
 function App() {
   useEffect(() => {
@@ -36,6 +37,7 @@ function App() {
       <About />
       <Showcase />
       <Contact />
+      <ChatBot />
     </div>
   );
 }
