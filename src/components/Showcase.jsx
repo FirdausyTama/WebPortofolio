@@ -24,7 +24,7 @@ const Showcase = () => {
     <section id="showcase" className="showcase">
       <div className="container">
         <div className="showcase-header reveal">
-          <h2 className="section-title">{t('showcase.title')} <span className="text-gradient">{t('showcase.title_highlight')}</span></h2>
+          <h2 className="section-title">{t('showcase.title')} <span className="">{t('showcase.title_highlight')}</span></h2>
           <p className="section-subtitle">{t('showcase.subtitle')}</p>
         </div>
 

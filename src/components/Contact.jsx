@@ -37,7 +37,7 @@ const Contact = () => {
     <section id="contact" className="contact">
       <div className="container">
         <h2 className="section-title reveal">
-          {t('contact.title')} <span className="text-gradient">{t('contact.title_highlight')}</span>
+          {t('contact.title')} <span className="">{t('contact.title_highlight')}</span>
         </h2>
         <p className="section-subtitle reveal">
           {t('contact.subtitle')}
